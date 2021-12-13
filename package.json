@@ -3,6 +3,9 @@
   "version": "0.1.0",
   "description": "Utils for Awesome-Elements",
   "main": "dist/index.js",
+  "files": [
+    "dist/"
+  ],
   "scripts": {
     "build": "tsc",
     "test": "echo \"Error: no test specified\" && exit 1",
