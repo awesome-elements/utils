@@ -1,12 +1,23 @@
+const handlerMap = new Map<Element, ((entry: ResizeObserverEntry) => void)[]>();
+const resizeObserver = new ResizeObserver((entries) => {
+  entries.forEach((entry) => {
+    handlerMap.get(entry.target)?.forEach((handler) => handler(entry));
+  });
+});
+
 export function observeResize(
-  element: HTMLElement,
+  target: Element,
   handlers: ((entry: ResizeObserverEntry) => void)[],
   options?: ResizeObserverOptions
 ) {
-  const resizeObserver = new ResizeObserver((entries) => {
-    entries.forEach((entry) => {
-      handlers.forEach((handler) => handler.call(this, entry));
-    });
-  });
-  resizeObserver.observe(element, options);
+  if (handlerMap.size <= 0) {
+    resizeObserver.disconnect();
+  }
+  handlerMap.set(target, handlers);
+  resizeObserver.observe(target, options);
+}
+
+export function unobserveResize(target: Element) {
+  resizeObserver.unobserve(target);
+  handlerMap.delete(target);
 }
